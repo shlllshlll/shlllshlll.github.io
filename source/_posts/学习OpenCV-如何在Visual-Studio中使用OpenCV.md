@@ -3,12 +3,15 @@ title: 学习OpenCV--如何在Visual Studio中使用OpenCV
 date: 2018-02-06 16:44:47
 tags:
 ---
+
 >原文地址： [How to build applications with OpenCV inside the "Microsoft Visual Studio" ](https://docs.opencv.org/master/dd/d6e/tutorial_windows_visual_studio_opencv.html)  
 >我的博客： [SHLLL的小站](http://shlll.me) \ [Github](https://shlllshlll.github.io/) \ [CSDN](http://blog.csdn.net/u011880112) \ [博客园](http://www.cnblogs.com/shlll/) \ [简书](https://www.jianshu.com/u/cbf8b521f6c2)
 
 ## 前言：
 
 OpenCV是一个开源的跨平台计算机视觉库，基于C和C++语言开发，同时也提供了Python、Java和Javascript等语言的绑定。OpenCV中包含了大量关于计算机视觉、模式识别和图像处理的API函数库。下面就来介绍一下OpenCV在Windows平台下Visual Studio环境中的安装、环境变量配置以及VS中如何进行配置。本文依据官方文档整理翻译而成。
+
+<!-- more -->
 
 ## 一、准备工作
 
