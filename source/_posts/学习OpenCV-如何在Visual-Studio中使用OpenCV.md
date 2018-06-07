@@ -1,7 +1,8 @@
 ---
 title: 学习OpenCV--如何在Visual Studio中使用OpenCV
 date: 2018-02-06 16:44:47
-tags:
+tags: [OpenCV]
+categories: [技术笔记]
 ---
 
 >原文地址： [How to build applications with OpenCV inside the "Microsoft Visual Studio" ](https://docs.opencv.org/master/dd/d6e/tutorial_windows_visual_studio_opencv.html)  

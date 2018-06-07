@@ -1,7 +1,8 @@
 ---
 title: GPS参数提取与轨迹重现
 date: 2017-11-18 00:55:54
-tags:
+tags: [LeafletJS, GIS]
+categories: [技术笔记]
 ---
 
 >项目地址： [Github](https://github.com/shlllshlll/GPSLoc)  
