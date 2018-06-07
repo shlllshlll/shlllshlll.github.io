@@ -15,7 +15,7 @@ categories: [技术笔记]
 1. 基于LeafletJS的GPS轨迹重现的WEB端
 2. 基于Qt WebEngine的桌面端程序
 3. 基于NodeJS和MySQL数据库的地图离线服务器
-4. 
+
 <!-- more -->
 
 ## GPS轨迹重现WEB版
