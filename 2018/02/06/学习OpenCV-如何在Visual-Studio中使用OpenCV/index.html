@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="原文地址： How to build applications with OpenCV inside the “Microsoft Visual Studio” 我的博客： SHLLL的小站 \ Github \ CSDN \ 博客园 \ 简书  前言：OpenCV是一个开源的跨平台计算机视觉库，基于C和C++语言开发，同时也提供了Python、Java和Javascript等语言的绑定。Ope">
+<meta name="keywords" content="OpenCV">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习OpenCV--如何在Visual Studio中使用OpenCV">
+<meta property="og:url" content="http://yoursite.com/2018/02/06/学习OpenCV-如何在Visual-Studio中使用OpenCV/index.html">
+<meta property="og:site_name" content="SHLLL&#39;s blog">
+<meta property="og:description" content="原文地址： How to build applications with OpenCV inside the “Microsoft Visual Studio” 我的博客： SHLLL的小站 \ Github \ CSDN \ 博客园 \ 简书  前言：OpenCV是一个开源的跨平台计算机视觉库，基于C和C++语言开发，同时也提供了Python、Java和Javascript等语言的绑定。Ope">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://i.loli.net/2018/02/06/5a799b2109197.png">
+<meta property="og:image" content="https://i.loli.net/2018/02/06/5a799b4f73bce.png">
+<meta property="og:image" content="https://i.loli.net/2018/02/06/5a79b6999a920.png">
+<meta property="og:image" content="https://i.loli.net/2018/02/06/5a79b77468741.png">
+<meta property="og:image" content="https://i.loli.net/2018/02/06/5a79b871e0e46.png">
+<meta property="og:image" content="https://i.loli.net/2018/02/06/5a79b90e868ab.png">
+<meta property="og:image" content="https://i.loli.net/2018/02/06/5a79bb983cb48.png">
+<meta property="og:image" content="https://i.loli.net/2018/02/06/5a79bb9727ca6.png">
+<meta property="og:image" content="https://i.loli.net/2018/02/06/5a79bc04561dd.png">
+<meta property="og:image" content="https://i.loli.net/2018/02/06/5a79c231e724a.png">
+<meta property="og:updated_time" content="2019-09-06T15:26:00.889Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="学习OpenCV--如何在Visual Studio中使用OpenCV">
+<meta name="twitter:description" content="原文地址： How to build applications with OpenCV inside the “Microsoft Visual Studio” 我的博客： SHLLL的小站 \ Github \ CSDN \ 博客园 \ 简书  前言：OpenCV是一个开源的跨平台计算机视觉库，基于C和C++语言开发，同时也提供了Python、Java和Javascript等语言的绑定。Ope">
+<meta name="twitter:image" content="https://i.loli.net/2018/02/06/5a799b2109197.png">
+  <link rel="canonical" href="http://yoursite.com/2018/02/06/学习OpenCV-如何在Visual-Studio中使用OpenCV/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>学习OpenCV--如何在Visual Studio中使用OpenCV | SHLLL's blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SHLLL's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/06/学习OpenCV-如何在Visual-Studio中使用OpenCV/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="SHLLL">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SHLLL's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">学习OpenCV--如何在Visual Studio中使用OpenCV
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2018-02-06 16:44:47" itemprop="dateCreated datePublished" datetime="2018-02-06T16:44:47+08:00">2018-02-06</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-09-06 23:26:00" itemprop="dateModified" datetime="2019-09-06T23:26:00+08:00">2019-09-06</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/技术笔记/" itemprop="url" rel="index"><span itemprop="name">技术笔记</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2018/02/06/学习OpenCV-如何在Visual-Studio中使用OpenCV/#comments" itemprop="discussionUrl"><span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/02/06/学习OpenCV-如何在Visual-Studio中使用OpenCV/" itemprop="commentCount"></span></a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>原文地址： <a href="https://docs.opencv.org/master/dd/d6e/tutorial_windows_visual_studio_opencv.html" target="_blank" rel="noopener">How to build applications with OpenCV inside the “Microsoft Visual Studio” </a><br>我的博客： <a href="http://shlll.me" target="_blank" rel="noopener">SHLLL的小站</a> \ <a href="https://shlllshlll.github.io/" target="_blank" rel="noopener">Github</a> \ <a href="http://blog.csdn.net/u011880112" target="_blank" rel="noopener">CSDN</a> \ <a href="http://www.cnblogs.com/shlll/" target="_blank" rel="noopener">博客园</a> \ <a href="https://www.jianshu.com/u/cbf8b521f6c2" target="_blank" rel="noopener">简书</a></p>
+</blockquote>
+<h2 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h2><p>OpenCV是一个开源的跨平台计算机视觉库，基于C和C++语言开发，同时也提供了Python、Java和Javascript等语言的绑定。OpenCV中包含了大量关于计算机视觉、模式识别和图像处理的API函数库。下面就来介绍一下OpenCV在Windows平台下Visual Studio环境中的安装、环境变量配置以及VS中如何进行配置。本文依据官方文档整理翻译而成。</p>
+<a id="more"></a>
+<h2 id="一、准备工作"><a href="#一、准备工作" class="headerlink" title="一、准备工作"></a>一、准备工作</h2><p>首要的准备工作当然是安装OpenCV和Visual Studio这两个软件，在安装上并没有什么难度，我们可以直接在<a href="https://opencv.org/releases.html" target="_blank" rel="noopener">OpenCV官网</a>中选择对应版本的Win Pack下载安装即可。而Visual Stuido安装也很简单，直接下载相应的安装包安装即可，在这里就不再赘述了。</p>
+<h2 id="二、OpenCV环境变量配置"><a href="#二、OpenCV环境变量配置" class="headerlink" title="二、OpenCV环境变量配置"></a>二、OpenCV环境变量配置</h2><p>在完成软件安装之后，我们还需要几个步骤才能在VS中使用OpenCV进行开发。在我的电脑-&gt;属性-&gt;高级系统设置-&gt;环境变量中，我们首先新建一个系统变量“OPENCV_DIR”，它的值则指向OpenCV的安装目录。</p>
+<p><img src="https://i.loli.net/2018/02/06/5a799b2109197.png" alt="OpenCV安装目录"></p>
+<p><img src="https://i.loli.net/2018/02/06/5a799b4f73bce.png" alt="OPENCV_DIR环境变量"></p>
+<p><em>注意：</em>目录中的VC15要和我们所安装的Visual Studio版本相匹配，由于博主安装的VS为2017版。因此其使用的VC编译器版本号为15，而加入我们使用的是VS2015，那么我们就需要将上述图片中的目录改为VC14。</p>
+<p><em>注意2：</em>这里我们首先创建了一个“OPENCV_DIR”变量来指向OpenCV的安装目录，而其它网上流传的配置教程大多没有这步，但是这样做的好处是明显的，因为我们后面对Path环境变量以及VS设置中的配置都引用我们上面设置的“OPENCV_DIR”变量作为安装目录。如此一来，当我们后面需要升级或者更改OpenCV目录的时候，我们只需要更改“OPENCV_DIR”变量的路径即可，不需要再进行繁杂的设置。</p>
+<p>接下来我们在Path环境变量中添加一个项“%OPENCV_DIR%\bin”，到这里，我们的环境变量配置就大功告成了。</p>
+<p><img src="https://i.loli.net/2018/02/06/5a79b6999a920.png" alt="Path环境变量设置"></p>
+<h2 id="三、VS配置"><a href="#三、VS配置" class="headerlink" title="三、VS配置"></a>三、VS配置</h2><h3 id="1、首先新建一个控制台工程"><a href="#1、首先新建一个控制台工程" class="headerlink" title="1、首先新建一个控制台工程"></a>1、首先新建一个控制台工程</h3><p>如图所示，我们新建一个空白的控制台工程</p>
+<p><img src="https://i.loli.net/2018/02/06/5a79b77468741.png" alt="新建工程"></p>
+<h3 id="2、打开属性管理器"><a href="#2、打开属性管理器" class="headerlink" title="2、打开属性管理器"></a>2、打开属性管理器</h3><p>接下来我们在Solution Explorer中找到我们新建的项目，然后右键弹出菜单中，我们找到最后一项，即Properties。</p>
+<p><img src="https://i.loli.net/2018/02/06/5a79b871e0e46.png" alt="属性管理器"></p>
+<p><img src="https://i.loli.net/2018/02/06/5a79b90e868ab.png" alt="工程属性窗口"></p>
+<p>找到C++设置组点击General，然后我们找到Additional Include Directories来设置我们OpenCV的Include路径，我们将其设置为“$(OPENCV_DIR)....\include”，这里的“$(OPENCV_DIR)”就是引用自我们在系统环境变量里设置的OPENCV_DIR。</p>
+<p><img src="https://i.loli.net/2018/02/06/5a79bb983cb48.png" alt="设置Include路径"></p>
+<p>接下来我们找到Linker-&gt;General然后找到“Additional Library Directories”选项，我们将其设置为“$(OPENCV_DIR)\lib”.</p>
+<p><img src="https://i.loli.net/2018/02/06/5a79bb9727ca6.png" alt="设置Lib路径"></p>
+<p>最后，我们还要向连接器指定我们要使用的OpenCV动态链接库，也就是在Linker-&gt;Input中，找到“Additional Dependencies”，然后添加我们要使用的库，即在Release中我们需要“opencv_world340.lib”，而在Debug模式下我们需要“opencv_world340d.lib”。</p>
+<p><img src="https://i.loli.net/2018/02/06/5a79bc04561dd.png" alt="设置Lib依赖"></p>
+<p>至此我们就完成了Opencv在Windows平台上的配置，接下来就可以愉快的使用OpenCV进行开发啦。</p>
+<h2 id="四、进行简单的测试"><a href="#四、进行简单的测试" class="headerlink" title="四、进行简单的测试"></a>四、进行简单的测试</h2><p>我们完成了配置就可以使用OpenCV来进行一个简单的小测试了。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdafx.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;opencv2/core.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;opencv2/imgcodecs.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;opencv2/highgui.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> cv;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    String filename = (argc &gt;= <span class="number">2</span>) ? argv[<span class="number">1</span>] : <span class="string">"../data/lena.jpg"</span>;</span><br><span class="line"></span><br><span class="line">    Mat image;</span><br><span class="line">    image = imread(filename, IMREAD_COLOR); <span class="comment">// Read the file</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (image.empty()) <span class="comment">// Check for invalid input</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"Could not open or find the image"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    namedWindow(<span class="string">"Display window"</span>, WINDOW_AUTOSIZE); <span class="comment">// Create a window for display.</span></span><br><span class="line">    imshow(<span class="string">"Display window"</span>, image); <span class="comment">// Show our image inside it.</span></span><br><span class="line"></span><br><span class="line">    waitKey(<span class="number">0</span>); <span class="comment">// Wait for a keystroke in the window</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上代码就是利用OpenCV打开一个图片，效果如下：</p>
+<p><img src="https://i.loli.net/2018/02/06/5a79c231e724a.png" alt="程序效果图"></p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/OpenCV/" rel="tag"># OpenCV</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2017/11/18/GPS参数提取与轨迹重现/" rel="next" title="GPS参数提取与轨迹重现">
+                  <i class="fa fa-chevron-left"></i> GPS参数提取与轨迹重现
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2018/06/06/毕业设计-基于垂直搜索引擎的关联关键词数据可视化的实现/" rel="prev" title="毕业设计--基于垂直搜索引擎的关联关键词数据可视化的实现">
+                  毕业设计--基于垂直搜索引擎的关联关键词数据可视化的实现 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    
+  <div class="comments" id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言："><span class="nav-number">1.</span> <span class="nav-text">前言：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一、准备工作"><span class="nav-number">2.</span> <span class="nav-text">一、准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、OpenCV环境变量配置"><span class="nav-number">3.</span> <span class="nav-text">二、OpenCV环境变量配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、VS配置"><span class="nav-number">4.</span> <span class="nav-text">三、VS配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、首先新建一个控制台工程"><span class="nav-number">4.1.</span> <span class="nav-text">1、首先新建一个控制台工程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、打开属性管理器"><span class="nav-number">4.2.</span> <span class="nav-text">2、打开属性管理器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、进行简单的测试"><span class="nav-number">5.</span> <span class="nav-text">四、进行简单的测试</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">SHLLL</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">tags</span>
+        
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">SHLLL</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.7.1</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://shlllshlll.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  function disqus_config() {
+    this.page.url = "http://yoursite.com/2018/02/06/学习OpenCV-如何在Visual-Studio中使用OpenCV/";
+    this.page.identifier = "2018/02/06/学习OpenCV-如何在Visual-Studio中使用OpenCV/";
+    this.page.title = '学习OpenCV--如何在Visual Studio中使用OpenCV';};
+  function loadComments() {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://shlllshlll.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  }
+    window.addEventListener('load', loadComments, false);
+  
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+</body>
+</html>
