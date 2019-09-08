@@ -72,7 +72,16 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: yilia
+theme: next
+
+# Theme config
+theme_config:
+  disqus:
+    enable: true   
+    shortname: shlllshlll 
+    count: true   
+    lazyload: false   
+    #post_meta_order: 0
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
