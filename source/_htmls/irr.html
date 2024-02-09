@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRR Calculator</title>
+    <!-- 引入Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <style>
+        /* 确保内容在各种设备上都居中显示 */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding-top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h4>IRR Calculator</h4>
+        <div class="row">
+            <form id="irrForm" class="col s12">
+                <div class="input-field col s12">
+                    <input id="principal" type="number" class="validate">
+                    <label for="principal">贷款本金</label>
+                </div>
+                <div class="input-field col s12">
+                    <input id="numPeriods" type="number" class="validate">
+                    <label for="numPeriods">贷款期数</label>
+                </div>
+                <div class="input-field col s12">
+                    <input id="annualRate" type="number" step="0.1" class="validate">
+                    <label for="annualRate">名义年化利率</label>
+                </div>
+                <button class="btn waves-effect waves-light" type="button" onclick="calculateAndDisplayIRR()">计算
+                    <i class="material-icons right">IRR</i>
+                </button>
+            </form>
+        </div>
+        <div id="result" class="row"></div>
+    </div>
+
+    <!-- 引入Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        function IRR(values, guess) {
+            // Credits: algorithm inspired by Apache OpenOffice
+
+            // Calculates the resulting amount
+            var irrResult = function (values, dates, rate) {
+                var r = rate + 1;
+                var result = values[0];
+                for (var i = 1; i < values.length; i++) {
+                    result += values[i] / Math.pow(r, (dates[i] - dates[0]) / 365);
+                }
+                return result;
+            }
+
+            // Calculates the first derivation
+            var irrResultDeriv = function (values, dates, rate) {
+                var r = rate + 1;
+                var result = 0;
+                for (var i = 1; i < values.length; i++) {
+                    var frac = (dates[i] - dates[0]) / 365;
+                    result -= frac * values[i] / Math.pow(r, frac + 1);
+                }
+                return result;
+            }
+
+            // Initialize dates and check that values contains at least one positive value and one negative value
+            var dates = [];
+            var positive = false;
+            var negative = false;
+            for (var i = 0; i < values.length; i++) {
+                dates[i] = (i === 0) ? 0 : dates[i - 1] + 365;
+                if (values[i] > 0) positive = true;
+                if (values[i] < 0) negative = true;
+            }
+
+            // Return error if values does not contain at least one positive value and one negative value
+            if (!positive || !negative) return '#NUM!';
+
+            // Initialize guess and resultRate
+            var guess = (typeof guess === 'undefined') ? 0.1 : guess;
+            var resultRate = guess;
+
+            // Set maximum epsilon for end of iteration
+            var epsMax = 1e-10;
+
+            // Set maximum number of iterations
+            var iterMax = 50;
+
+            // Implement Newton's method
+            var newRate, epsRate, resultValue;
+            var iteration = 0;
+            var contLoop = true;
+            do {
+                resultValue = irrResult(values, dates, resultRate);
+                newRate = resultRate - resultValue / irrResultDeriv(values, dates, resultRate);
+                epsRate = Math.abs(newRate - resultRate);
+                resultRate = newRate;
+                contLoop = (epsRate > epsMax) && (Math.abs(resultValue) > epsMax);
+            } while (contLoop && (++iteration < iterMax));
+
+            if (contLoop) return '#NUM!';
+
+            // Return internal rate of return
+            return resultRate;
+        }
+
+        function calculateIRR(principal, numPeriods, annualRate) {
+            // 转换年化利率为每期利率
+            const periodRate = annualRate / 12;
+            // 初始猜测IRR为年化利率
+            let guessRate = periodRate;
+            // 设置迭代的最大次数和容忍误差
+            const maxIteration = 10000;
+            const tolerance = 0.01;
+            // 计算总利息
+            const totalInterest = principal * numPeriods * periodRate;
+            const totalPayment = principal + totalInterest;
+            // 计算每期的支付额
+            const payment = totalPayment / numPeriods;
+
+            const arr = new Array(numPeriods + 1).fill(-payment);
+            arr[0] = principal;
+
+            const irr = IRR(arr)
+            return { irr, totalInterest, payment };
+        }
+
+        // function calculateIRR(principal, numPeriods, annualRate) {
+        //     // 转换年化利率为每期利率
+        //     const periodRate = annualRate / 12;
+        //     // 初始猜测IRR为年化利率
+        //     let guessRate = periodRate;
+        //     // 设置迭代的最大次数和容忍误差
+        //     const maxIteration = 10000;
+        //     const tolerance = 0.01;
+        //     // 计算总利息
+        //     const totalInterest = principal * numPeriods * periodRate;
+        //     const totalPayment = principal + totalInterest;
+        //     // 计算每期的支付额
+        //     const payment = totalPayment / numPeriods;
+        //     console.log(`payment:${payment}`);
+        //     // const payment = principal * (periodRate / (1 - Math.pow(1 + periodRate, -numPeriods)));
+
+        //     for (let i = 0; i < maxIteration; i++) {
+        //         let npv = -principal; // 初始投资为负值
+        //         // 计算NPV
+        //         for (let j = 1; j <= numPeriods; j++) {
+        //             npv += payment / Math.pow(1 + guessRate, j);
+        //         }
+
+        //         // 检查NPV是否足够接近于0
+        //         const step = npv / principal / 12
+        //         console.log(`iter:${i}, guessRate:${guessRate},nvp:${npv},step:${step}`)
+
+        //         if (Math.abs(npv) <= tolerance) {
+        //             return [guessRate, totalInterest, payment];
+        //         }
+
+        //         // 调整guessRate以改善NPV接近0的目标
+        //         guessRate += step;
+        //     //    if (npv > 0) {
+        //     //        guessRate += 0.0001 / 4; // 简单的调整方法，非标准牛顿法
+        //     //    } else {
+        //     //        guessRate -= 0.0001 / 4; // 简单的调整方法，非标准牛顿法
+        //     //    }
+        //     }
+
+        //     // 如果迭代后未能找到满足条件的IRR，则返回null
+        //     return [null, null, null];
+        // }
+
+
+        function calculateAndDisplayIRR() {
+            const principal = parseFloat(document.getElementById('principal').value);
+            const numPeriods = parseInt(document.getElementById('numPeriods').value);
+            const annualRate = parseFloat(document.getElementById('annualRate').value) / 100; // 转换为小数形式
+
+            const { irr, totalInterest, payment } = calculateIRR(principal, numPeriods, annualRate);
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<p>每期利率: ${(irr * 100).toFixed(4)}%，年化利率：${(irr * 12 * 100).toFixed(2)}%</p><p>总利息: ${totalInterest}</p><p>月供: ${payment.toFixed(2)}</p>`;
+        }
+    </script>
+</body>
+
+</html>
